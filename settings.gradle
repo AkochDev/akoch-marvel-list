@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MarvelList"
 include ':app'
+include ':domain'
+include ':data'
