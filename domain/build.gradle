@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 apply from: '../dependencies.gradle'
@@ -35,6 +37,10 @@ android {
 
 dependencies {
     def appDependencies = rootProject.ext.generalDependencies
+
+    implementation appDependencies.hilt
+    implementation appDependencies.hilt_navigation
+    kapt appDependencies.hilt_compiler
 
     implementation appDependencies.androidx_core
     testImplementation appDependencies.test_junit
