@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 apply from: '../dependencies.gradle'
@@ -46,6 +48,7 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+        pickFirst 'META-INF/gradle/incremental.annotation.processors'
     }
 }
 
@@ -53,8 +56,8 @@ dependencies {
 
     def appDependencies = rootProject.ext.generalDependencies
 
-    project(":domain")
-    project(":data")
+    implementation project(path: ':domain')
+    implementation project(path: ':data')
 
     implementation appDependencies.android_material
     implementation appDependencies.androidx_core
@@ -64,6 +67,14 @@ dependencies {
     implementation appDependencies.androidx_compose_material
     implementation appDependencies.androidx_compose_preview
     implementation appDependencies.androidx_activity_compose
+    implementation appDependencies.retrofit
+    implementation appDependencies.retrofit_converter
+    implementation appDependencies.retrofit_logger
+    implementation appDependencies.hilt
+    implementation appDependencies.hilt_navigation
+    implementation appDependencies.androidx_compose_runtime
+
+    kapt appDependencies.hilt_compiler
 
     testImplementation appDependencies.test_junit
     androidTestImplementation appDependencies.test_junit_androidx_ext
