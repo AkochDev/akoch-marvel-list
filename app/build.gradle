@@ -73,6 +73,7 @@ dependencies {
     implementation appDependencies.hilt
     implementation appDependencies.hilt_navigation
     implementation appDependencies.androidx_compose_runtime
+    implementation appDependencies.coil_compose
 
     kapt appDependencies.hilt_compiler
 

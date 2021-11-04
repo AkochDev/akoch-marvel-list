@@ -7,7 +7,10 @@ import com.akochdev.domain.model.Result
 import com.akochdev.domain.model.Result.Success
 import com.akochdev.domain.model.Result.Failure
 import com.akochdev.data.extensions.toMarvelHash
+import com.akochdev.data.model.CharacterDetailResponseModel
 import com.akochdev.data.service.MarvelService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.lang.Exception
 import java.util.Date
 
@@ -17,6 +20,7 @@ private const val UNKNOWN_RESPONSE_CODE = -1
 
 interface RemoteDataSource {
     suspend fun getMarvelCharacters(limit: Int, offset: Int): Result<CharacterListResponseModel>
+    suspend fun getCharacterDetail(characterId: String): Flow<Result<CharacterDetailResponseModel>>
 }
 
 class RemoteDataSourceImpl @Inject constructor(
@@ -39,6 +43,30 @@ class RemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Failure(UNKNOWN_RESPONSE_CODE, e.localizedMessage, e)
+        }
+    }
+
+    override suspend fun getCharacterDetail(characterId: String): Flow<Result<CharacterDetailResponseModel>> { // Using flow just to showcase
+        val timestamp = Date().time
+        val hash = "$timestamp$MARVEL_API_KEY_PRIVATE$MARVEL_API_KEY_PUBLIC".toMarvelHash()
+        return flow {
+            emit(
+                try {
+                    val response = service.getCharacterDetail(
+                        characterId,
+                        MARVEL_API_KEY_PUBLIC,
+                        hash,
+                        timestamp
+                    )
+                    if (response.isSuccessful) {
+                        Success(response.body())
+                    } else {
+                        Failure(response.code(), response.message())
+                    }
+                } catch (e: Exception) {
+                    Failure(UNKNOWN_RESPONSE_CODE, e.localizedMessage, e)
+                }
+            )
         }
     }
 }
