@@ -15,3 +15,5 @@ fun String.toMarvelHash(): String {
         .toString(STRING_RADIX)
         .padStart(KEY_LENGTH, ZERO_AS_CHAR)
 }
+
+fun String.toSecureUrl(): String = this.replace("http://", "https://")

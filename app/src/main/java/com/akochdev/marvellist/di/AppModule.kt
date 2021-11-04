@@ -2,9 +2,10 @@ package com.akochdev.marvellist.di
 
 import com.akochdev.data.datasource.RemoteDataSource
 import com.akochdev.data.datasource.RemoteDataSourceImpl
-import com.akochdev.data.mapper.CharacterListResponseMapper
+import com.akochdev.data.mapper.CharacterResponseMapper
 import com.akochdev.data.repository.MarvelRepositoryImpl
 import com.akochdev.data.service.MarvelService
+import com.akochdev.domain.usecase.CharacterDetailUseCase
 import com.akochdev.domain.usecase.CharacterListUseCase
 import com.akochdev.domain.usecase.MarvelRepository
 import dagger.Module
@@ -47,12 +48,18 @@ class AppModule {
     @Provides
     @Singleton
     fun provideRepository(remoteDataSource: RemoteDataSource): MarvelRepository {
-        return MarvelRepositoryImpl(remoteDataSource, CharacterListResponseMapper())
+        return MarvelRepositoryImpl(remoteDataSource, CharacterResponseMapper())
     }
 
     @Provides
     @Singleton
-    fun provideUseCase(repository: MarvelRepository): CharacterListUseCase {
+    fun provideListUseCase(repository: MarvelRepository): CharacterListUseCase {
         return CharacterListUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailUseCase(repository: MarvelRepository): CharacterDetailUseCase {
+        return CharacterDetailUseCase(repository)
     }
 }
