@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MarvelList</string>
+
+    <string name="character_list_load_more_legend">There was an error retrieving the data, press here to retry</string>
 </resources>

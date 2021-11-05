@@ -16,7 +16,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
@@ -45,7 +48,7 @@ fun CharacterListScreen(
             uiState,
             CharacterListViewModel.PAGE_SIZE,
             { position: Int -> viewModel.onChangeScrollPosition(position) },
-            { viewModel.loadMore() }
+            { forced -> viewModel.loadMore(forced) }
         ) { characterId ->
             navController.navigate("$CHARACTER_DETAIL_SCREEN/$characterId")
         }
@@ -65,7 +68,7 @@ fun ContentCharacterListScreen(
     uiState: CharacterListScreenUIState,
     pageSize: Int,
     onScrollChanged: (Int) -> Unit,
-    loadMoreAction: () -> Unit,
+    loadMoreAction: (Boolean) -> Unit,
     goDetailAction: (String) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -82,9 +85,15 @@ fun ContentCharacterListScreen(
             ) {
                 itemsIndexed(list) { index, item ->
                     ContentCharacterListItem(item, goDetailAction)
+
                     onScrollChanged.invoke(index)
                     if ((index + 1) >= (uiState.currentPage * pageSize) && !uiState.isLoading) {
-                        loadMoreAction.invoke()
+                        loadMoreAction.invoke(false)
+                    }
+                }
+                item {
+                    if (uiState.isErrorLoadingMore) {
+                        ContentLoadMoreCharacterListItem(loadMoreAction)
                     }
                 }
             }
@@ -93,7 +102,8 @@ fun ContentCharacterListScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Transparent),
+                    .background(Color.Transparent)
+                    .clickable { /* DO NOTHING */ },
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = Color.White)
@@ -131,6 +141,25 @@ fun ContentCharacterListItem(
             )
         }
         Divider(color = Color.LightGray, modifier = Modifier.padding(vertical = 8.dp))
+    }
+}
+
+@Composable
+fun ContentLoadMoreCharacterListItem(loadMore: (Boolean) -> Unit) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .defaultMinSize(48.dp)
+        .padding(top = 4.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
+        .background(GeneralBackgroundColor)
+        .clickable { loadMore.invoke(true) },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            modifier = Modifier.fillMaxSize(),
+            style = typography.h6.copy(fontSize = 20.sp),
+            text = stringResource(R.string.character_list_load_more_legend),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
