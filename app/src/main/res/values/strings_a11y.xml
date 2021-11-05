@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="image_go_back_arrow">Go Back</string>
+
+    <string name="error_screen_no_wifi_image">Connection error image</string>
+</resources>

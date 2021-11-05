@@ -67,6 +67,7 @@ dependencies {
     implementation appDependencies.androidx_compose_material
     implementation appDependencies.androidx_compose_preview
     implementation appDependencies.androidx_activity_compose
+    implementation appDependencies.androidx_constraint_compose
     implementation appDependencies.retrofit
     implementation appDependencies.retrofit_converter
     implementation appDependencies.retrofit_logger

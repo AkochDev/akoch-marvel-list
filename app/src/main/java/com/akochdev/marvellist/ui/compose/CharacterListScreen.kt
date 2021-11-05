@@ -53,10 +53,7 @@ fun CharacterListScreen(
             navController.navigate("$CHARACTER_DETAIL_SCREEN/$characterId")
         }
         uiState.isLoading -> LoadingScreen()
-        uiState.isEmptyState -> EmptyCharacterListScreen {
-            viewModel.fetchCharacterList()
-        }
-        uiState.isErrorState -> ErrorCharacterListScreen(uiState.errorMessage) {
+        uiState.isEmptyState || uiState.isErrorState -> ErrorScreen(uiState.errorMessage) {
             viewModel.fetchCharacterList()
         }
     }
@@ -84,6 +81,7 @@ fun ContentCharacterListScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(list) { index, item ->
+
                     ContentCharacterListItem(item, goDetailAction)
 
                     onScrollChanged.invoke(index)
@@ -146,12 +144,13 @@ fun ContentCharacterListItem(
 
 @Composable
 fun ContentLoadMoreCharacterListItem(loadMore: (Boolean) -> Unit) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .defaultMinSize(48.dp)
-        .padding(top = 4.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
-        .background(GeneralBackgroundColor)
-        .clickable { loadMore.invoke(true) },
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(48.dp)
+            .padding(top = 4.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
+            .background(GeneralBackgroundColor)
+            .clickable { loadMore.invoke(true) },
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -161,14 +160,4 @@ fun ContentLoadMoreCharacterListItem(loadMore: (Boolean) -> Unit) {
             textAlign = TextAlign.Center
         )
     }
-}
-
-@Composable
-fun EmptyCharacterListScreen(reloadAction: () -> Unit) {
-    Text("Empty state")
-}
-
-@Composable
-fun ErrorCharacterListScreen(errorMessage: String?, reloadAction: () -> Unit) {
-    Text("Error $errorMessage")
 }
