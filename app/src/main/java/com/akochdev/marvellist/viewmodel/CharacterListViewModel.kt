@@ -21,6 +21,7 @@ class CharacterListViewModel @Inject constructor(
 
     private var listScrollPosition = 0
     private var currentPage = 1
+
     private var isLoadingNextPage = false
 
     private val _characterList: MutableLiveData<CharacterListScreenUIState> =
@@ -57,10 +58,10 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
-    fun loadMore() {
-        if ((listScrollPosition + 1) >= (currentPage * PAGE_SIZE)) {
+    fun loadMore(forced: Boolean = false) {
+        if (forced || (listScrollPosition + 1) >= (currentPage * PAGE_SIZE)) {
             isLoadingNextPage = true
-            currentPage++
+            if (!forced) currentPage++
 
             val oldData = _characterList.value
             _characterList.postValue(
@@ -76,12 +77,21 @@ class CharacterListViewModel @Inject constructor(
                     limit = PAGE_SIZE,
                     offset = (currentPage - 1) * PAGE_SIZE
                 )
-                if (result is Success && result.value != null) { // we don't really care if this call fails or brings no data
+                if (result is Success && result.value != null) {
                     _characterList.postValue(
                         CharacterListScreenUIState(
                             isLoading = false,
                             currentPage = currentPage,
                             characterData = oldData?.characterData?.plus(result.value ?: listOf())
+                        )
+                    )
+                } else {
+                    _characterList.postValue(
+                        CharacterListScreenUIState(
+                            isLoading = false,
+                            isErrorLoadingMore = true,
+                            currentPage = currentPage,
+                            characterData = oldData?.characterData
                         )
                     )
                 }
@@ -94,6 +104,6 @@ class CharacterListViewModel @Inject constructor(
     }
 
     companion object {
-        const val PAGE_SIZE = 50
+        const val PAGE_SIZE = 10
     }
 }

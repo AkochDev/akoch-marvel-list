@@ -7,6 +7,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+const val MARVEL_SERVICE_BASE_URL = "https://gateway.marvel.com"
+
 interface MarvelService {
 
     @GET("/v1/public/characters")

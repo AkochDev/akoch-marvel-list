@@ -55,7 +55,10 @@ dependencies {
     implementation appDependencies.retrofit
     implementation appDependencies.retrofit_converter
     implementation appDependencies.retrofit_logger
+    implementation appDependencies.room_runtime
+    implementation appDependencies.room_ktx
 
+    kapt appDependencies.room_compiler
     kapt appDependencies.hilt_compiler
 
     testImplementation appDependencies.test_junit
