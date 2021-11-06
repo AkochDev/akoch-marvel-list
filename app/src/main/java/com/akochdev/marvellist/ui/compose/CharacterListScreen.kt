@@ -3,7 +3,14 @@ package com.akochdev.marvellist.ui.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -101,7 +108,7 @@ fun ContentCharacterListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Transparent)
-                    .clickable { /* DO NOTHING */ },
+                    .clickable { /* Prevent list scrolling while loading more data */ },
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = Color.White)
@@ -130,12 +137,16 @@ fun ContentCharacterListItem(
             ),
             contentDescription = item.name
         )
-        Text(text = item.name, style = typography.h6, modifier = Modifier.padding(top = 8.dp))
+        Text(
+            text = item.name,
+            style = typography.h6,
+            modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
+        )
         if (item.description.isNotEmpty()) {
             Text(
                 text = item.description,
                 style = typography.body1,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
             )
         }
         Divider(color = Color.LightGray, modifier = Modifier.padding(vertical = 8.dp))
@@ -156,7 +167,7 @@ fun ContentLoadMoreCharacterListItem(loadMore: (Boolean) -> Unit) {
         Text(
             modifier = Modifier.fillMaxSize(),
             style = typography.h6.copy(fontSize = 20.sp),
-            text = stringResource(R.string.character_list_load_more_legend),
+            text = stringResource(R.string.text_character_list_load_more_legend),
             textAlign = TextAlign.Center
         )
     }

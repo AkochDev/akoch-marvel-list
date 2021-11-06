@@ -55,7 +55,6 @@ fun ErrorScreen(errorMessage: String? = null, reloadAction: () -> Unit) {
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-
                 },
             painter = painterResource(id = R.drawable.ic_baseline_wifi_off_24_white),
             contentDescription = stringResource(id = R.string.error_screen_no_wifi_image)
