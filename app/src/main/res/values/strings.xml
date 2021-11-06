@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">MarvelList</string>
 
-    <string name="character_list_load_more_legend">There was an error retrieving the data, press here to retry</string>
+    <string name="text_button_reload">RELOAD</string>
+
+    <string name="text_general_connection_error">There was an error while retrieving the data, please check your connection and try again.</string>
+
+    <string name="text_character_list_load_more_legend">There was an error retrieving the data, press here to retry.</string>
+
+    <string name="text_character_detail_participated_on">Appeared In:</string>
+    <string name="text_character_detail_stories">Stories</string>
+    <string name="text_character_detail_series">Series</string>
+    <string name="text_character_detail_comics">Comics</string>
+    <string name="text_character_detail_visit_details">Tap here to go to the details page.</string>
+    <string name="text_character_detail_visit_comics">Tap here to go to the comics page.</string>
+    <string name="text_character_detail_visit_wiki">Tap here to go to the wiki page.</string>
 </resources>

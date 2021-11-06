@@ -23,7 +23,13 @@ class CharacterDatabaseMapper {
             id = item.id,
             name = item.name,
             description = item.description,
-            pictureUrl = item.pictureUrl
+            pictureUrl = item.pictureUrl,
+            comics = item.comics ?: emptyList(),
+            series = item.series ?: emptyList(),
+            stories = item.stories ?: emptyList(),
+            detailUrl = item.detailUrl,
+            comicLinkUrl = item.comicLink,
+            wikiLinkUrl = item.wikiLink
         )
     }
 
@@ -43,7 +49,13 @@ class CharacterDatabaseMapper {
             id = item.id,
             name = item.name,
             description = item.description,
-            pictureUrl = item.pictureUrl
+            pictureUrl = item.pictureUrl,
+            comics = item.comics,
+            series = item.series,
+            stories = item.stories,
+            detailUrl = item.detailUrl,
+            comicLink = item.comicLinkUrl,
+            wikiLink = item.wikiLinkUrl
         )
     }
 }

@@ -3,7 +3,14 @@ package com.akochdev.marvellist.ui.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,10 +60,7 @@ fun CharacterListScreen(
             navController.navigate("$CHARACTER_DETAIL_SCREEN/$characterId")
         }
         uiState.isLoading -> LoadingScreen()
-        uiState.isEmptyState -> EmptyCharacterListScreen {
-            viewModel.fetchCharacterList()
-        }
-        uiState.isErrorState -> ErrorCharacterListScreen(uiState.errorMessage) {
+        uiState.isEmptyState || uiState.isErrorState -> ErrorScreen(uiState.errorMessage) {
             viewModel.fetchCharacterList()
         }
     }
@@ -84,6 +88,7 @@ fun ContentCharacterListScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(list) { index, item ->
+
                     ContentCharacterListItem(item, goDetailAction)
 
                     onScrollChanged.invoke(index)
@@ -103,7 +108,7 @@ fun ContentCharacterListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Transparent)
-                    .clickable { /* DO NOTHING */ },
+                    .clickable { /* Prevent list scrolling while loading more data */ },
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = Color.White)
@@ -132,12 +137,16 @@ fun ContentCharacterListItem(
             ),
             contentDescription = item.name
         )
-        Text(text = item.name, style = typography.h6, modifier = Modifier.padding(top = 8.dp))
+        Text(
+            text = item.name,
+            style = typography.h6,
+            modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
+        )
         if (item.description.isNotEmpty()) {
             Text(
                 text = item.description,
                 style = typography.body1,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
             )
         }
         Divider(color = Color.LightGray, modifier = Modifier.padding(vertical = 8.dp))
@@ -146,29 +155,20 @@ fun ContentCharacterListItem(
 
 @Composable
 fun ContentLoadMoreCharacterListItem(loadMore: (Boolean) -> Unit) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .defaultMinSize(48.dp)
-        .padding(top = 4.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
-        .background(GeneralBackgroundColor)
-        .clickable { loadMore.invoke(true) },
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(48.dp)
+            .padding(top = 4.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
+            .background(GeneralBackgroundColor)
+            .clickable { loadMore.invoke(true) },
         contentAlignment = Alignment.Center
     ) {
         Text(
             modifier = Modifier.fillMaxSize(),
             style = typography.h6.copy(fontSize = 20.sp),
-            text = stringResource(R.string.character_list_load_more_legend),
+            text = stringResource(R.string.text_character_list_load_more_legend),
             textAlign = TextAlign.Center
         )
     }
-}
-
-@Composable
-fun EmptyCharacterListScreen(reloadAction: () -> Unit) {
-    Text("Empty state")
-}
-
-@Composable
-fun ErrorCharacterListScreen(errorMessage: String?, reloadAction: () -> Unit) {
-    Text("Error $errorMessage")
 }

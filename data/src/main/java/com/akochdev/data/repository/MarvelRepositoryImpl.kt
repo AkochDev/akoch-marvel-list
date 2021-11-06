@@ -26,7 +26,6 @@ class MarvelRepositoryImpl @Inject constructor(
         limit: Int,
         offset: Int
     ): Result<List<CharacterListModel>> {
-
         val localRecords = localDataSource.getMarvelCharacters(limit, offset)
         return if (localRecords.isNotEmpty()) {
             Success(databaseMapper.toCharacterListDomain(localRecords))
@@ -34,13 +33,7 @@ class MarvelRepositoryImpl @Inject constructor(
             when (val result = remoteDataSource.getMarvelCharacters(limit, offset)) {
                 is Success -> {
                     val newItems = responseMapper.toCharacterListDomain(result.value)
-                    newItems?.let { items ->
-                        localDataSource.insertMarvelCharacters(
-                            databaseMapper.toCharacterListItemDb(
-                                items
-                            )
-                        )
-                    }
+                    createLocalCache(newItems)
                     Success(newItems)
                 }
                 is Failure -> Failure.fromFailure(result)
@@ -59,18 +52,28 @@ class MarvelRepositoryImpl @Inject constructor(
                 when (result) {
                     is Success -> {
                         val newCharacter = responseMapper.toCharacterDetailDomain(result.value)
-                        newCharacter?.let { newChar ->
-                            localDataSource.insertCharacterDetail(
-                                databaseMapper.toCharacterDetailDb(
-                                    newChar
-                                )
-                            )
-                        }
+                        createLocalDetailCache(newCharacter)
                         Success(newCharacter)
                     }
                     is Failure -> Failure.fromFailure(result)
                 }
             }
+        }
+    }
+
+    private suspend fun createLocalCache(list: List<CharacterListModel>?) {
+        list?.let { items ->
+            localDataSource.insertMarvelCharacters(
+                databaseMapper.toCharacterListItemDb(items)
+            )
+        }
+    }
+
+    private suspend fun createLocalDetailCache(item: CharacterDetailModel?) {
+        item?.let { newChar ->
+            localDataSource.insertCharacterDetail(
+                databaseMapper.toCharacterDetailDb(newChar)
+            )
         }
     }
 }
