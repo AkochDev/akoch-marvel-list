@@ -40,8 +40,13 @@ dependencies {
 
     implementation appDependencies.hilt
     implementation appDependencies.hilt_navigation
+    implementation appDependencies.androidx_core
+
     kapt appDependencies.hilt_compiler
 
-    implementation appDependencies.androidx_core
     testImplementation appDependencies.test_junit
+    testImplementation appDependencies.mockk
+    testImplementation appDependencies.mockito_core
+    testImplementation appDependencies.mockito_kotlin
+    testImplementation appDependencies.coroutines_test
 }

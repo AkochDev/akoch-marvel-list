@@ -5,9 +5,16 @@ import com.akochdev.data.database.model.CharacterListItemDBModel
 import com.akochdev.domain.model.CharacterDetailModel
 import com.akochdev.domain.model.CharacterListModel
 
-class CharacterDatabaseMapper {
+interface CharacterDatabaseMapper {
+    fun toCharacterListDomain(items: List<CharacterListItemDBModel>): List<CharacterListModel>
+    fun toCharacterDetailDomain(item: CharacterDetailDBModel): CharacterDetailModel
+    fun toCharacterListItemDb(items: List<CharacterListModel>): List<CharacterListItemDBModel>
+    fun toCharacterDetailDb(item: CharacterDetailModel): CharacterDetailDBModel
+}
 
-    fun toCharacterListDomain(items: List<CharacterListItemDBModel>): List<CharacterListModel> {
+class CharacterDatabaseMapperImpl : CharacterDatabaseMapper {
+
+    override fun toCharacterListDomain(items: List<CharacterListItemDBModel>): List<CharacterListModel> {
         return items.map { item ->
             CharacterListModel(
                 id = item.id,
@@ -18,7 +25,7 @@ class CharacterDatabaseMapper {
         }
     }
 
-    fun toCharacterDetailDomain(item: CharacterDetailDBModel): CharacterDetailModel {
+    override fun toCharacterDetailDomain(item: CharacterDetailDBModel): CharacterDetailModel {
         return CharacterDetailModel(
             id = item.id,
             name = item.name,
@@ -28,12 +35,12 @@ class CharacterDatabaseMapper {
             series = item.series ?: emptyList(),
             stories = item.stories ?: emptyList(),
             detailUrl = item.detailUrl,
-            comicLinkUrl = item.comicLink,
-            wikiLinkUrl = item.wikiLink
+            comicLinkUrl = item.comicLinkUrl,
+            wikiLinkUrl = item.wikiLinkUrl
         )
     }
 
-    fun toCharacterListItemDb(items: List<CharacterListModel>): List<CharacterListItemDBModel> {
+    override fun toCharacterListItemDb(items: List<CharacterListModel>): List<CharacterListItemDBModel> {
         return items.map { item ->
             CharacterListItemDBModel(
                 id = item.id,
@@ -44,7 +51,7 @@ class CharacterDatabaseMapper {
         }
     }
 
-    fun toCharacterDetailDb(item: CharacterDetailModel): CharacterDetailDBModel {
+    override fun toCharacterDetailDb(item: CharacterDetailModel): CharacterDetailDBModel {
         return CharacterDetailDBModel(
             id = item.id,
             name = item.name,
@@ -54,8 +61,8 @@ class CharacterDatabaseMapper {
             series = item.series,
             stories = item.stories,
             detailUrl = item.detailUrl,
-            comicLink = item.comicLinkUrl,
-            wikiLink = item.wikiLinkUrl
+            comicLinkUrl = item.comicLinkUrl,
+            wikiLinkUrl = item.wikiLinkUrl
         )
     }
 }

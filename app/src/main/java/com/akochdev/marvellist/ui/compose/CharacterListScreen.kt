@@ -23,6 +23,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,11 +34,17 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.akochdev.domain.model.CharacterListModel
 import com.akochdev.marvellist.R
+import com.akochdev.marvellist.ui.compose.CharacterListScreenTestTags.*
 import com.akochdev.marvellist.ui.navigation.Destination.CHARACTER_DETAIL_SCREEN
 import com.akochdev.marvellist.ui.state.CharacterListScreenUIState
 import com.akochdev.marvellist.ui.theme.GeneralBackgroundColor
 import com.akochdev.marvellist.ui.theme.typography
 import com.akochdev.marvellist.viewmodel.CharacterListViewModel
+
+sealed class CharacterListScreenTestTags(val tag: String) {
+    object MainContainer : CharacterDetailScreenTestTags("CHARACTER_LIST_SCREEN_CONTAINER_TEST_TAG")
+    object LoadMoreItem: CharacterDetailScreenTestTags("CHARACTER_LIST_SCREEN_LOAD_MORE_ITEM_TEST_TAG")
+}
 
 @ExperimentalCoilApi
 @Composable
@@ -81,6 +88,7 @@ fun ContentCharacterListScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(GeneralBackgroundColor)
+            .testTag(MainContainer.tag)
     ) {
         uiState.characterData?.let { list ->
             LazyColumn(
@@ -161,6 +169,7 @@ fun ContentLoadMoreCharacterListItem(loadMore: (Boolean) -> Unit) {
             .defaultMinSize(48.dp)
             .padding(top = 4.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
             .background(GeneralBackgroundColor)
+            .testTag(LoadMoreItem.tag)
             .clickable { loadMore.invoke(true) },
         contentAlignment = Alignment.Center
     ) {

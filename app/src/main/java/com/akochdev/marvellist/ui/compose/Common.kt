@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -22,9 +23,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.akochdev.marvellist.R
+import com.akochdev.marvellist.ui.compose.CommonScreenTestTags.*
 import com.akochdev.marvellist.ui.theme.GeneralBackgroundColor
 import com.akochdev.marvellist.ui.theme.MineShaft
 import com.akochdev.marvellist.ui.theme.typography
+
+sealed class CommonScreenTestTags(val tag: String) {
+    object Loading : CharacterDetailScreenTestTags("LOADING_SCREEN_TEST_TAG")
+    object Error: CharacterDetailScreenTestTags("ERROR_SCREEN_TEST_TAG")
+}
 
 @Composable
 fun LoadingScreen() {
@@ -33,6 +40,7 @@ fun LoadingScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(GeneralBackgroundColor)
+            .testTag(Loading.tag)
     ) {
         CircularProgressIndicator(color = Color.White)
     }
@@ -44,6 +52,7 @@ fun ErrorScreen(errorMessage: String? = null, reloadAction: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = GeneralBackgroundColor)
+            .testTag(Error.tag)
     ) {
         val (image, message, button) = createRefs()
 

@@ -14,6 +14,6 @@ data class CharacterDetailDBModel(
     val series: List<String>?,
     val stories: List<String>?,
     val detailUrl: String?,
-    val comicLink: String?,
-    val wikiLink: String?,
+    val comicLinkUrl: String?,
+    val wikiLinkUrl: String?,
 )

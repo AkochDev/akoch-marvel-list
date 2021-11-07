@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -46,11 +47,30 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.akochdev.domain.model.CharacterDetailModel
 import com.akochdev.marvellist.R
+import com.akochdev.marvellist.ui.compose.CharacterDetailScreenTestTags.*
 import com.akochdev.marvellist.ui.state.CharacterDetailScreenUIState
 import com.akochdev.marvellist.ui.theme.GeneralBackgroundColor
 import com.akochdev.marvellist.ui.theme.typography
 import com.akochdev.marvellist.viewmodel.CharacterDetailViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
+
+sealed class CharacterDetailScreenTestTags(val tag: String) {
+    object Content : CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_TEST_TAG")
+    object AppBarName :
+        CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_APP_BAR_NAME_TEST_TAG")
+
+    object Name : CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_NAME_TEST_TAG")
+    object Description :
+        CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_DESCRIPTION_TEST_TAG")
+
+    object AppearancesTitle :
+        CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_APPEARANCES_TEST_TAG")
+
+    object WikiLink : CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_WIKI_LINK_TEST_TAG")
+    object ComicLink : CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_COMIC_LINK_TEST_TAG")
+    object DetailLink :
+        CharacterDetailScreenTestTags("CONTENT_CHARACTER_DETAIL_DETAIL_LINK_TEST_TAG")
+}
 
 @InternalCoroutinesApi
 @ExperimentalCoilApi
@@ -81,7 +101,7 @@ fun ContentCharacterDetail(
     item: CharacterDetailModel
 ) {
     val scrollState = rememberScrollState()
-    Scaffold(
+    Scaffold(modifier = Modifier.testTag(Content.tag),
         topBar = {
             TopAppBar(backgroundColor = GeneralBackgroundColor) {
                 Image(
@@ -94,7 +114,9 @@ fun ContentCharacterDetail(
                 Text(
                     text = item.name,
                     style = typography.h6.copy(fontSize = 20.sp),
-                    modifier = Modifier.padding(start = 20.dp)
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+                        .testTag(AppBarName.tag)
                 )
             }
         }
@@ -125,6 +147,7 @@ fun ContentCharacterDetail(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+                    .testTag(Name.tag)
             )
             if (item.description.isNotEmpty()) {
                 Text(
@@ -133,6 +156,7 @@ fun ContentCharacterDetail(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+                        .testTag(Description.tag)
                 )
             }
             if (item.comics.isNotEmpty() || item.series.isNotEmpty() || item.stories.isNotEmpty()) {
@@ -143,6 +167,7 @@ fun ContentCharacterDetail(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(all = 20.dp)
+                        .testTag(AppearancesTitle.tag)
                 )
                 CharacterDetailsAppearances(
                     stringResource(id = R.string.text_character_detail_comics),
@@ -158,6 +183,7 @@ fun ContentCharacterDetail(
                 )
                 if (item.detailUrl.isNullOrEmpty().not()) {
                     VisitLink(
+                        modifier = Modifier.testTag(DetailLink.tag),
                         text = stringResource(
                             id = R.string.text_character_detail_visit_details
                         ),
@@ -166,6 +192,7 @@ fun ContentCharacterDetail(
                 }
                 if (item.comicLinkUrl.isNullOrEmpty().not()) {
                     VisitLink(
+                        modifier = Modifier.testTag(ComicLink.tag),
                         text = stringResource(
                             id = R.string.text_character_detail_visit_comics
                         ),
@@ -174,6 +201,7 @@ fun ContentCharacterDetail(
                 }
                 if (item.wikiLinkUrl.isNullOrEmpty().not()) {
                     VisitLink(
+                        modifier = Modifier.testTag(WikiLink.tag),
                         text = stringResource(
                             id = R.string.text_character_detail_visit_comics
                         ),
@@ -224,13 +252,13 @@ fun CharacterDetailsAppearances(title: String, list: List<String>) {
 }
 
 @Composable
-fun VisitLink(text: String, navigateToUrl: String) {
+fun VisitLink(text: String, navigateToUrl: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     Text(
         text = text,
         textAlign = TextAlign.Center,
         style = typography.h6.copy(fontSize = 15.sp, textDecoration = TextDecoration.Underline),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(20.dp)
             .clickable {

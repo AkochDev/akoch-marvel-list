@@ -37,6 +37,7 @@ class MarvelRepositoryImpl @Inject constructor(
                     Success(newItems)
                 }
                 is Failure -> Failure.fromFailure(result)
+                else -> Failure()
             }
         }
     }
