@@ -19,8 +19,8 @@ import javax.inject.Inject
 private const val UNKNOWN_RESPONSE_CODE = -1
 
 interface RemoteDataSource {
-    suspend fun getMarvelCharacters(limit: Int, offset: Int): Result<CharacterListResponseModel>
-    suspend fun getCharacterDetail(characterId: String): Flow<Result<CharacterDetailResponseModel>>
+    suspend fun getMarvelCharacters(limit: Int, offset: Int, timestamp: Long = Date().time): Result<CharacterListResponseModel>
+    suspend fun getCharacterDetail(characterId: String, timestamp: Long = Date().time): Flow<Result<CharacterDetailResponseModel>>
 }
 
 class RemoteDataSourceImpl @Inject constructor(
@@ -29,9 +29,9 @@ class RemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getMarvelCharacters(
         limit: Int,
-        offset: Int
+        offset: Int,
+        timestamp: Long
     ): Result<CharacterListResponseModel> {
-        val timestamp = Date().time
         val hash = "$timestamp$MARVEL_API_KEY_PRIVATE$MARVEL_API_KEY_PUBLIC".toMarvelHash()
         return try {
             val response =
@@ -46,8 +46,7 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCharacterDetail(characterId: String): Flow<Result<CharacterDetailResponseModel>> { // Using flow just to showcase
-        val timestamp = Date().time
+    override suspend fun getCharacterDetail(characterId: String, timestamp: Long): Flow<Result<CharacterDetailResponseModel>> { // Using flow just to showcase
         val hash = "$timestamp$MARVEL_API_KEY_PRIVATE$MARVEL_API_KEY_PUBLIC".toMarvelHash()
         return flow {
             emit(

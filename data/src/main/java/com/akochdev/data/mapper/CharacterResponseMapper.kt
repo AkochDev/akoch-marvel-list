@@ -6,13 +6,18 @@ import com.akochdev.domain.model.CharacterListModel
 import com.akochdev.data.model.CharacterListResponseModel
 import com.akochdev.domain.model.CharacterDetailModel
 
-private const val DETAIL_JSON_KEY = "detail"
-private const val COMIC_JSON_KEY = "comiclink"
-private const val WIKI_JSON_KEY = "wiki"
+const val RESPONSE_URL_DETAIL_JSON_KEY = "detail"
+const val RESPONSE_URL_COMIC_JSON_KEY = "comiclink"
+const val RESPONSE_URL_WIKI_JSON_KEY = "wiki"
 
-class CharacterResponseMapper {
+interface CharacterResponseMapper {
+    fun toCharacterListDomain(response: CharacterListResponseModel?): List<CharacterListModel>?
+    fun toCharacterDetailDomain(response: CharacterDetailResponseModel?): CharacterDetailModel?
+}
 
-    fun toCharacterListDomain(response: CharacterListResponseModel?): List<CharacterListModel>? {
+class CharacterResponseMapperImpl : CharacterResponseMapper {
+
+    override fun toCharacterListDomain(response: CharacterListResponseModel?): List<CharacterListModel>? {
         if (response == null) return null
         return response.data.results.map { item ->
             CharacterListModel(
@@ -24,7 +29,7 @@ class CharacterResponseMapper {
         }
     }
 
-    fun toCharacterDetailDomain(response: CharacterDetailResponseModel?): CharacterDetailModel? {
+    override fun toCharacterDetailDomain(response: CharacterDetailResponseModel?): CharacterDetailModel? {
         val responseVal = response?.data?.results?.firstOrNull() ?: return null
         with(responseVal) {
             return CharacterDetailModel(
@@ -35,9 +40,9 @@ class CharacterResponseMapper {
                 comics = comics.items.map { it.name },
                 series = series.items.map { it.name },
                 stories = stories.items.map { it.name },
-                detailUrl = urls.firstOrNull { it.type == DETAIL_JSON_KEY }?.url?.toSecureUrl(),
-                comicLinkUrl = urls.firstOrNull { it.type == COMIC_JSON_KEY }?.url?.toSecureUrl(),
-                wikiLinkUrl = urls.firstOrNull { it.type == WIKI_JSON_KEY }?.url?.toSecureUrl(),
+                detailUrl = urls.firstOrNull { it.type == RESPONSE_URL_DETAIL_JSON_KEY }?.url?.toSecureUrl(),
+                comicLinkUrl = urls.firstOrNull { it.type == RESPONSE_URL_COMIC_JSON_KEY }?.url?.toSecureUrl(),
+                wikiLinkUrl = urls.firstOrNull { it.type == RESPONSE_URL_WIKI_JSON_KEY }?.url?.toSecureUrl(),
             )
         }
     }

@@ -9,12 +9,16 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class CharacterDetailUseCase @Inject constructor(
+interface CharacterDetailUseCase {
+    suspend fun getMarvelCharacterDetails(characterId: String): Flow<Result<CharacterDetailModel>>
+}
+
+class CharacterDetailUseCaseImpl @Inject constructor(
     private val repository: MarvelRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+): CharacterDetailUseCase {
 
-    suspend fun getMarvelCharacterDetails(
+    override suspend fun getMarvelCharacterDetails(
         characterId: String
     ): Flow<Result<CharacterDetailModel>> {
         return repository.getMarvelCharacterDetails(characterId).flowOn(dispatcher).conflate()

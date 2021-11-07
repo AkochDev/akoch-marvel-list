@@ -7,14 +7,12 @@ import com.akochdev.data.datasource.LocalDBDatasource
 import com.akochdev.data.datasource.LocalDBDatasourceImpl
 import com.akochdev.data.datasource.RemoteDataSource
 import com.akochdev.data.datasource.RemoteDataSourceImpl
-import com.akochdev.data.mapper.CharacterDatabaseMapper
-import com.akochdev.data.mapper.CharacterResponseMapper
+import com.akochdev.data.mapper.CharacterDatabaseMapperImpl
+import com.akochdev.data.mapper.CharacterResponseMapperImpl
 import com.akochdev.data.repository.MarvelRepositoryImpl
 import com.akochdev.data.service.MARVEL_SERVICE_BASE_URL
 import com.akochdev.data.service.MarvelService
-import com.akochdev.domain.usecase.CharacterDetailUseCase
-import com.akochdev.domain.usecase.CharacterListUseCase
-import com.akochdev.domain.usecase.MarvelRepository
+import com.akochdev.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -80,21 +78,21 @@ class AppModule {
         return MarvelRepositoryImpl(
             remoteDataSource,
             localDataSource,
-            CharacterResponseMapper(),
-            CharacterDatabaseMapper()
+            CharacterResponseMapperImpl(),
+            CharacterDatabaseMapperImpl()
         )
     }
 
     @Provides
     @Singleton
     fun provideListUseCase(repository: MarvelRepository): CharacterListUseCase {
-        return CharacterListUseCase(repository)
+        return CharacterListUseCaseImpl(repository)
     }
 
     @Provides
     @Singleton
     fun provideDetailUseCase(repository: MarvelRepository): CharacterDetailUseCase {
-        return CharacterDetailUseCase(repository)
+        return CharacterDetailUseCaseImpl(repository)
     }
 
     @Provides

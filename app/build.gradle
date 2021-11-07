@@ -82,7 +82,21 @@ dependencies {
     kapt appDependencies.hilt_compiler
 
     testImplementation appDependencies.test_junit
+    testImplementation appDependencies.mockk
+    testImplementation appDependencies.mockito_core
+    testImplementation appDependencies.mockito_kotlin
+    testImplementation appDependencies.coroutines_test
+    testImplementation appDependencies.arch_core_testing
+    testImplementation appDependencies.androidx_lifecycle_testing
+
+    androidTestImplementation appDependencies.mockk
+    androidTestImplementation appDependencies.mockito_kotlin
+    androidTestImplementation (appDependencies.test_androidx_compose_ui) {
+        // conflicts with mockito due to direct inclusion of byte buddy
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
     androidTestImplementation appDependencies.test_junit_androidx_ext
-    androidTestImplementation appDependencies.test_androidx_compose_ui
+
     debugImplementation appDependencies.debug_androidx_compose_ui
+    debugImplementation appDependencies.test_compose_manifest
 }

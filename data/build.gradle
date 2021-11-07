@@ -62,4 +62,8 @@ dependencies {
     kapt appDependencies.hilt_compiler
 
     testImplementation appDependencies.test_junit
+    testImplementation appDependencies.mockk
+    testImplementation appDependencies.mockito_core
+    testImplementation appDependencies.mockito_kotlin
+    testImplementation appDependencies.coroutines_test
 }
